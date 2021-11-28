@@ -32,7 +32,7 @@ class Blockchain {
     this.chain.push(newBlock);
   }
   isChainValid() {
-    for (let index = 0; index < this.chain.length; index++) {
+    for (let index = 1; index < this.chain.length; index++) {
       const currBlock = this.chain[index];
       const prevBlock = this.chain[index - 1];
       if (currBlock.hash !== currBlock.calculatedHash()) {
@@ -51,7 +51,7 @@ superCoin.addBlock(new Block(1, Date.now().toString(), { amount: 1 }));
 superCoin.addBlock(new Block(2, Date.now().toString(), { amount: 3 }));
 console.log(JSON.stringify(superCoin, null, 4));
 
-// console.log(`Is this chain valid? ${superCoin.isChainValid()}`);
+console.log(`Is this chain valid? ${superCoin.isChainValid()}`);
 
 // data corruption
 // superCoin.chain[1].data = { amount: 7 };
