@@ -51,8 +51,10 @@ superCoin.addBlock(new Block(1, Date.now().toString(), { amount: 1 }));
 superCoin.addBlock(new Block(2, Date.now().toString(), { amount: 3 }));
 console.log(JSON.stringify(superCoin, null, 4));
 
-console.log(`Is this chain valid? ${superCoin.isChainValid()}`);
+console.log(`chain valid test #1 : ${superCoin.isChainValid()}`);
 
-// data corruption
-// superCoin.chain[1].data = { amount: 7 };
-// console.log(`Is this chain valid? ${superCoin.isChainValid()}`);
+// data corruption test
+superCoin.chain[1].data = { amount: 7 };
+superCoin.chain[1].hash = superCoin.chain[1].calculatedHash();
+
+console.log(`chain valid test #2 : ${superCoin.isChainValid()}`);
