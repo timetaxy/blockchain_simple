@@ -1,11 +1,18 @@
 `use strict`;
 const SHA256 = require("crypto-js/sha256");
+class Tx {
+  constructor(fromAddr, toAddr, amount) {
+    this.fromAddr = fromAddr;
+    this.toAddr = toAddr;
+    this.amount = amount;
+  }
+}
 class Block {
-  constructor(idx, timestamp, data, prevHash = "") {
+  constructor(timestamp, txs, prevHash = "") {
     //prevHash is optional
-    this.idx = idx;
+    // this.idx = idx;
     this.timestamp = timestamp;
-    this.data = data;
+    this.txs = txs;
     this.prevHash = prevHash;
     this.hash = this.calculatedHash();
     this.nonce = 0;
@@ -37,12 +44,38 @@ class Blockchain {
   constructor() {
     this.chain = [this.createGenesisBlock()];
     this.difficulty = 2;
+    this.pendingTxs = [];
+    this.miningReward = 100;
   }
   createGenesisBlock() {
     return new Block(0, Date.now().toString(), `Genesis block`, `0`);
   }
   getLatestBlock() {
     return this.chain[this.chain.length - 1];
+  }
+  minePendingTxs(miningRewardAddr) {
+    let block = new Block(Date.now(), this.pendingTxs);
+    block.mineBlock(this.difficulty);
+    console.log(`Block mine success`);
+    this.chain.push(block);
+    this.pendingTxs = [new Tx(null, miningRewardAddr, this.miningReward)];
+  }
+  createTx(tx) {
+    this.pendingTxs.push(tx);
+  }
+  getBalance(addr) {
+    let balance = 0;
+    for (const block of this.chain) {
+      for (const tx of block.txs) {
+        if (tx.fromAddr == addr) {
+          balance -= tx.amount;
+        }
+        if (tx.toAddr == addr) {
+          balance += tx.amount;
+        }
+      }
+    }
+    return balance;
   }
   addBlock(newBlock) {
     newBlock.prevHash = this.getLatestBlock().hash;
