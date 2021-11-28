@@ -2,6 +2,7 @@
 const SHA256 = require("crypto-js/sha256");
 class Block {
   constructor(idx, timestamp, data, prevHash = "") {
+    //prevHash is optional
     this.idx = idx;
     this.timestamp = timestamp;
     this.data = data;
@@ -17,7 +18,7 @@ class Block {
 
 class Blockchain {
   constructor() {
-    this.chain = [];
+    this.chain = [this.createGenesisBlock()];
   }
   createGenesisBlock() {
     return new Block(0, Date.now().toString(), `Genesis block`, `0`);
@@ -50,8 +51,8 @@ superCoin.addBlock(new Block(1, Date.now().toString(), { amount: 1 }));
 superCoin.addBlock(new Block(2, Date.now().toString(), { amount: 3 }));
 console.log(JSON.stringify(superCoin, null, 4));
 
-console.log(`Is this chain valid? ${superCoin.isChainValid()}`);
+// console.log(`Is this chain valid? ${superCoin.isChainValid()}`);
 
 // data corruption
-superCoin.chain[1].data = { amount: 7 };
-console.log(`Is this chain valid? ${superCoin.isChainValid()}`);
+// superCoin.chain[1].data = { amount: 7 };
+// console.log(`Is this chain valid? ${superCoin.isChainValid()}`);
