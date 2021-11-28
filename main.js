@@ -44,3 +44,14 @@ class Blockchain {
     return true;
   }
 }
+
+let superCoin = new Blockchain();
+superCoin.addBlock(new Block(1, Date.now().toString(), { amount: 1 }));
+superCoin.addBlock(new Block(2, Date.now().toString(), { amount: 3 }));
+console.log(JSON.stringify(superCoin, null, 4));
+
+console.log(`Is this chain valid? ${superCoin.isChainValid()}`);
+
+// data corruption
+superCoin.chain[1].data = { amount: 7 };
+console.log(`Is this chain valid? ${superCoin.isChainValid()}`);
